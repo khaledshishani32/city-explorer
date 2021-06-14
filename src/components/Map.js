@@ -4,7 +4,7 @@ export class Map extends Component {
     render() {
         return (
             <div>
-                <Image src={`https://maps.locationiq.com/v3/staticmap?key=pk.aea192bfa4bcd913e5e8bda121e144d2&q&center=${this.props.cityData.Data.lat},${this.props.cityData.lon}&zoom=15`} rounded />
+                <Image src={`https://maps.locationiq.com/v3/staticmap?key=pk.aea192bfa4bcd913e5e8bda121e144d2&q&center=${this.props.cityData.lat},${this.props.cityData.lon}&zoom=15`} rounded />
             </div>
         )
     }
