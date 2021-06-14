@@ -8,6 +8,11 @@ export class CityData extends Component {
 
         <p>`The lat is :` {this.props.cityData.lat}</p>
         <p>`The lat is : ` {this.props.cityData.lon}</p>
+        {
+          this.props.weatherData.map(value=>{
+            <p>{value.weather.data.description}</p>
+          })
+        }
       </div>
     );
   }
