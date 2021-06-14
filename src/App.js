@@ -1,70 +1,72 @@
 import React, { Component } from "react";
 import axios from "axios";
-import Form from "react-bootstrap/Form";
+import SearchForm from "./components/SearchForm";
+import AlertMessage from "./components/AlertMessage";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Button from "react-bootstrap/Button";
+import Map from "./components/Map";
+import CityData from "./components/CityData";
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Container from 'react-bootstrap/Container'
 
 export class App extends Component {
-  
- constructor(props){
-   super(props);
-   this.state={
-     cityName : '',
-     cityData : {},
-     displayData: false
-   }
- }
-
-
-  updateCityName= (e) =>{
-    this.setState({
-      cityName :e.target.value 
-      
-    })
-    console.log(this.state)
+  constructor(props) {
+    super(props);
+    this.state = {
+      cityName: "",
+      cityData: {},
+      displayData: false,
+      alert: false,
+      error: "",
+    };
   }
 
-  getCityData = async (e)=>{
+  updateCityName = (e) => {
+    this.setState({
+      cityName: e.target.value,
+    });
+    console.log(this.state);
+  };
+
+  getCityData = async (e) => {
     e.preventDefault();
-    const axiosResp = await axios.get(`https://us1.locationiq.com/v1/search.php?key=pk.aea192bfa4bcd913e5e8bda121e144d2&q=${this.state.cityName}&format=json`);
+    try {
+      const axiosResp = await axios.get(
+        `https://us1.locationiq.com/v1/search.php?key=pk.aea192bfa4bcd913e5e8bda121e144d2&q=${this.state.cityName}&format=json`
+      );
 
-    this.setState({
-      cityData : axiosResp.data[0],
-      displayData : true
-    })
-
-
-
-  }
+      this.setState({
+        cityData: axiosResp.data[0],
+        displayData: true,
+        alert: false,
+      });
+    } catch (error) {
+      this.setState({
+        error: error.message,
+        alert: true,
+      });
+    }
+  };
   render() {
     return (
-      <div>
-        <Form onSubmit={this.getCityData}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>City Name : </Form.Label>
-            <Form.Control onChange={this.updateCityName} type="text" placeholder="Enter City Name !" />
-          </Form.Group>
-
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form>
-        { this.state.displayData &&
-         <div>
-         <p>
-           {this.state.cityData.display_name}
-         </p>
-
-         <p>
-           {this.state.cityData.lat}
-         </p>
-         <p>
-           {this.state.cityData.lon}
-         </p>
-
-      
-         </div>
-        }
+      <div style={{ textAlign: "center" }}>
+        {this.state.alert && <AlertMessage error={this.state.error} />}
+        <Container>
+          <Row>
+            <Col>
+              <SearchForm
+                updateCityName={this.state.updateCityName}
+                getCityData={this.state.getCityData}
+              />
+              {this.state.displayData && (
+                <>
+                  <Map cityData={this.state.cityData} />
+                  <CityData cityData={this.state.cityData} />
+                </>
+              )}
+            </Col>
+          </Row>
+        </Container>
       </div>
     );
   }
