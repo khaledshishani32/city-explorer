@@ -15,6 +15,7 @@ export class App extends Component {
     this.state={
       mycityName : '',
       cityData:{},
+      weatherData:{},
       show:false,
       alert:'',
       error:''
@@ -29,8 +30,12 @@ export class App extends Component {
    getCityData=async (e)=>{
      e.preventDefault();
      try{ const axiosData= await axios.get(`https://us1.locationiq.com/v1/search.php?key=pk.aea192bfa4bcd913e5e8bda121e144d2&q=${this.state.mycityName}&format=json`);
+
+     const weatherApi= await axios.get(`${process.env.REACT_APP_URL}/weather`);
+
      this.setState({
       cityData:axiosData.data[0],
+      weatherData:weatherApi.data,
       display:true,
       alert:false
      })
@@ -54,7 +59,9 @@ export class App extends Component {
         {this.state.display && (
           <>
             <Map cityData={this.state.cityData} />
-            <CityData cityData={this.state.cityData} />
+            <CityData cityData={this.state.cityData}
+             weatherData={this.state.weatherData}
+            />
           </>
         )}
       </div>
