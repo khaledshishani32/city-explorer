@@ -5,6 +5,7 @@ import AlertMessage from "./components/AlertMessage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Map from "./components/Map";
 import CityData from "./components/CityData";
+import Weather from "./components/Weather";
 // import Row from "react-bootstrap/Row";
 // import Col from "react-bootstrap/Col";
 // import Container from "react-bootstrap/Container";
@@ -15,10 +16,11 @@ export class App extends Component {
     this.state={
       mycityName : '',
       cityData:{},
-      weatherData:{},
       show:false,
       alert:'',
-      error:''
+      error:'',
+      lat:'',
+      lon:''
     }
   }
    updateCityName= (e) =>{
@@ -27,45 +29,54 @@ export class App extends Component {
      })
     //  console.log(this.state)
    }
-   getCityData=async (e)=>{
-     e.preventDefault();
-     try{ const axiosData= await axios.get(`https://us1.locationiq.com/v1/search.php?key=pk.aea192bfa4bcd913e5e8bda121e144d2&q=${this.state.mycityName}&format=json`);
 
-     const weatherApi= await axios.get(`${process.env.REACT_APP_URL}/weather`);
 
-     this.setState({
-      cityData:axiosData.data[0],
-      weatherData:weatherApi.data,
-      display:true,
-      alert:false
-     })
-    }
-    catch (error){
+   getCityData = async (e) => {
+    e.preventDefault();
+    await axios.get(`https://us1.locationiq.com/v1/search.php?key=pk.aea192bfa4bcd913e5e8bda121e144d2&q=${this.state.mycityName}&format=json`).then(locationRes => {
       this.setState({
-        error:error.message,
-        alert:true
-      })
-    }
-    //  console.log(axiosData);
-   };
+        cityData: locationRes.data[0],
+        lat: locationRes.data[0].lat,
+        lon: locationRes.data[0].lon,
+      });
+      axios.get(`http://localhost:8080/weather?lon=${this.state.lon}&lat=${this.state.lat}`).then(weatherRes => {
+        this.setState({
+          weatherData: weatherRes.data,
+          show: true,
+          alert: false
+        })
+      });
+    });
+
+  }
+    
   render() {
     return (
-      <div >
-        {this.state.alert && <AlertMessage error={this.state.error} />}
+      <div>
+        {this.state.alert &&
+          <AlertMessage
+            error={this.state.error}
+          />
+        }
         <SearchForm
           getCityData={this.getCityData}
-          updateCityName={this.updateCityName}
+          updateCityNameState={this.updateCityNameState}
         />
-        {this.state.display && (
+        {(this.state.show) &&
           <>
-            <Map cityData={this.state.cityData} />
-            <CityData cityData={this.state.cityData}
-             weatherData={this.state.weatherData}
+            <Map
+              cityData={this.state.cityData}
+            />
+            <CityData
+              cityData={this.state.cityData}
+            />
+            <Weather
+              weather={this.state.weatherData}
             />
           </>
-        )}
+        }
       </div>
-    );
+    )
   }
 }
 
