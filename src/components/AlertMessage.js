@@ -5,9 +5,9 @@ export class AlertMessage extends Component {
     render() {
         return (
             <div>
-                <Alert variant="danger" >
-                    This is a {this.props.error}
-                </Alert>
+        <Alert>
+          this is a {this.props.error}
+        </Alert>
             </div>
         )
     }
