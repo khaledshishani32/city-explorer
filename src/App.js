@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Map from "./components/Map";
 import CityData from "./components/CityData";
 import Weather from "./components/Weather";
+import Movies from "./components/Movies";
 // import Row from "react-bootstrap/Row";
 // import Col from "react-bootstrap/Col";
 // import Container from "react-bootstrap/Container";
@@ -39,16 +40,26 @@ export class App extends Component {
         lat: locationRes.data[0].lat,
         lon: locationRes.data[0].lon,
       });
-      axios.get(`http://localhost:8080/weather?lon=${this.state.lon}&lat=${this.state.lat}`).then(weatherRes => {
-        this.setState({
-          weatherData: weatherRes.data,
-          show: true,
-          alert: false
-        })
+      //  axios.get(`http:localhost:8080/weather?lon=${this.state.lon}&lat=${this.state.lat}`).then(weatherRes => {
+      //    this.setState({
+      //      weatherData: weatherRes.data,
+      //      show: true,
+      //      alert: false
+      //    })
+         
+         axios.get(`http://localhost:8080/movies?=${process.env.MOVIE_API_KEY}&query=${this.cityName}`).then(moviesre => {
+          this.setState({
+            moviesData: moviesre.data,
+            
+            show: true,
+            alert: false
+          })
       });
+         
+      
     });
 
-  }
+  };
     
   render() {
     return (
@@ -70,8 +81,14 @@ export class App extends Component {
             <CityData
               cityData={this.state.cityData}
             />
-            <Weather
+            {/* <Weather
               weather={this.state.weatherData}
+            /> */}
+
+            <Movies 
+            
+            movies={this.state.moviesData}
+            
             />
           </>
         }
