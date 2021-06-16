@@ -8,7 +8,7 @@ export class SearchForm extends Component {
             <Form onSubmit={this.props.getCityData}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Enter City Name</Form.Label>
-                    <Form.Control onChange={this.props.updateCityNameState} type="text" placeholder="Enter City Name" />
+                    <Form.Control onChange={this.props.updateCityName} type="text" placeholder="Enter City Name" />
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Explore

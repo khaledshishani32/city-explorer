@@ -60,7 +60,7 @@ export class App extends Component {
         }
         <SearchForm
           getCityData={this.getCityData}
-          updateCityNameState={this.updateCityNameState}
+          updateCityName={this.updateCityName}
         />
         {(this.state.show) &&
           <>
