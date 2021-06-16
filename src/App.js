@@ -23,7 +23,7 @@ export class App extends Component {
       lon:''
     }
   }
-   updateCityName= (e) =>{
+   updateCityStateName= (e) =>{
      this.setState({
       mycityName :e.target.value,
      })
@@ -60,7 +60,7 @@ export class App extends Component {
         }
         <SearchForm
           getCityData={this.getCityData}
-          updateCityName={this.updateCityName}
+          updateCityStateName={this.updateCityStateName}
         />
         {(this.state.show) &&
           <>
