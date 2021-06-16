@@ -1,11 +1,36 @@
 import React, { Component } from 'react'
-
+import ListGroup from 'react-bootstrap/ListGroup'
 export class Movies extends Component {
     render() {
         return (
-            <div>
-                
-            </div>
+            <>
+            {
+                this.props.movies.map(moviesObj=>{
+                    return(
+                        <>
+                        <ListGroup>
+                        {moviesObj.title}
+                        </ListGroup>
+                        <ListGroup>
+                        {moviesObj.overview}
+                        </ListGroup>
+                        <ListGroup>
+                        {moviesObj.vote_average}
+                        </ListGroup>
+                        <ListGroup>
+                        {moviesObj.overview}
+                        </ListGroup>
+                        <ListGroup>
+                        {moviesObj.popularity}
+                        </ListGroup>
+                        <ListGroup>
+                        {moviesObj.release_date}
+                        </ListGroup>
+                        </>
+                    )
+                })
+            }
+            </>
         )
     }
 }
