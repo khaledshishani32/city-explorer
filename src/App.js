@@ -21,7 +21,9 @@ export class App extends Component {
       alert:'',
       error:'',
       lat:'',
-      lon:''
+      lon:'',
+      weatherData:'',
+      moviesData:''
     }
   }
    updateCityStateName= (e) =>{
@@ -34,33 +36,39 @@ export class App extends Component {
 
    getCityData = async (e) => {
     e.preventDefault();
+   
     await axios.get(`https://us1.locationiq.com/v1/search.php?key=pk.aea192bfa4bcd913e5e8bda121e144d2&q=${this.state.mycityName}&format=json`).then(locationRes => {
       this.setState({
         cityData: locationRes.data[0],
         lat: locationRes.data[0].lat,
         lon: locationRes.data[0].lon,
       });
-      //  axios.get(`http:localhost:8080/weather?lon=${this.state.lon}&lat=${this.state.lat}`).then(weatherRes => {
-      //    this.setState({
-      //      weatherData: weatherRes.data,
-      //      show: true,
-      //      alert: false
-      //    })
-         
-         axios.get(`http://localhost:8080/movies?=${process.env.MOVIE_API_KEY}&query=${this.cityName}`).then(moviesre => {
+        axios.get(`http://localhost:8080/weather?lon=${this.state.lon}&lat=${this.state.lat}`).then(weatherRes => {
           this.setState({
-            moviesData: moviesre.data,
-            
-            show: true,
+            weatherData: weatherRes.data,
+            //show: true,
             alert: false
-          })
+          });
+          axios.get(`http://localhost:8080/movies?=&query=${this.cityName}`).then(moviesre => {
+            this.setState({
+              moviesData: moviesre.data,
+             
+              show: true,
+              alert: false
+            })
+              
+          });
+          
+        });
+          
       });
          
       
-    });
+  
 
-  };
     
+  }
+  
   render() {
     return (
       <div>
@@ -81,20 +89,21 @@ export class App extends Component {
             <CityData
               cityData={this.state.cityData}
             />
-            {/* <Weather
+             <Weather
               weather={this.state.weatherData}
-            /> */}
+            /> 
 
             <Movies 
             
             movies={this.state.moviesData}
             
-            />
+            /> 
           </>
         }
       </div>
     )
   }
+
 }
 
 export default App;
